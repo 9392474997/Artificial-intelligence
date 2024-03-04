@@ -1,0 +1,33 @@
+from collections import deque
+def transitions(state, max_jug1, max_jug2):
+    jug1, jug2 = state
+    next_states = []
+    next_states.append((max_jug1, jug2))
+    next_states.append((jug1, max_jug2))
+    next_states.append((0, jug2))
+    next_states.append((jug1, 0))
+    amount = min(jug1, max_jug2 - jug2)
+    next_states.append((jug1 - amount, jug2 + amount))
+    amount = min(jug2, max_jug1 - jug1)
+    next_states.append((jug1 + amount, jug2 - amount))
+    return next_states
+def water_jug_bfs(start, target, max_jug1, max_jug2):
+    visited = set()
+    queue = deque([(start, [])])
+    while queue:
+        state, path = queue.popleft()
+        if state == target:
+            return path + [state]
+        
+        visited.add(state)
+        for next_state in transitions(state, max_jug1, max_jug2):
+            if next_state not in visited:
+                queue.append((next_state, path + [state]))
+
+    return "No solution found"
+start_state = (0, 0)
+target_state = (2, 0)  # Target is to have 2 liters in jug1
+max_jug1 = 4
+max_jug2 = 3
+solution = water_jug_bfs(start_state, target_state, max_jug1, max_jug2)
+print("Solution:", solution)

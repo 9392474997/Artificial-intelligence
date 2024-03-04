@@ -1,0 +1,29 @@
+from itertools import permutations
+
+def solve_cryptarithmetic(puzzle):
+    # Extracting unique letters from the puzzle
+    letters = set(char for word in puzzle.split() for char in word if char.isalpha())
+    # Generating all possible permutations of digits from 0 to 9
+    digits = permutations(range(10), len(letters))
+    
+    for digit_permutation in digits:
+        # Mapping each letter to a digit in the permutation
+        digit_map = dict(zip(letters, digit_permutation))
+        
+        # Substituting digits for letters and evaluating the expression
+        evaluated = ''.join(str(digit_map[char]) if char.isalpha() else char for char in puzzle)
+        if eval(evaluated):
+            return digit_map
+    
+    return None
+
+# Example usage:
+if __name__ == "__main__":
+    puzzle = "SEND + MORE == MONEY"
+    solution = solve_cryptarithmetic(puzzle)
+    if solution:
+        print("Solution found:")
+        for letter, digit in solution.items():
+            print(f"{letter}: {digit}")
+    else:
+        print("No solution found.")
